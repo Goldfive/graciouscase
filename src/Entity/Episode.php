@@ -87,12 +87,12 @@ class Episode
         return $this;
     }
 
-    public function getAirDate(): ?\DateTimeInterface
+    public function getAirDate(): ?string
     {
         return $this->air_date;
     }
 
-    public function setAirDate(\DateTimeInterface $air_date): self
+    public function setAirDate(string $air_date): self
     {
         $this->air_date = $air_date;
 

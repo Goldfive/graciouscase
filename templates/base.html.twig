@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Rick & Morty episodes{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+        <div style="float:right;">
+            <a href="{{ path('connection_switch') }}">Current connection type: {{ connectionType }}</a>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

@@ -38,7 +38,8 @@ class ImportToDatabaseFromAPICommand extends Command
         $entity = $input->getArgument('entity');
 
         if ($entity) {
-            $response = new ApiConnectionHandler($entity, array(), $this->em);
+            $apiConnection = new ApiConnectionHandler($entity, array(), $this->em, true);
+            $apiConnection->handleData();
         }
 
         if ($input->getOption('option1')) {

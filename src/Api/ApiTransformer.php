@@ -44,6 +44,7 @@ class ApiTransformer
     public function transformToEntity()
     {
         $transformData = $this->transformData;
+
         $object = null;
         switch ($this->entity) {
             case 'character':
@@ -53,16 +54,20 @@ class ApiTransformer
                 $origin = (sizeof($origin) > 0 ? $origin[0] : null);
 
                 $episodes = new ArrayCollection();
-                foreach ($transformData['episode'] as $episodeId => $url) {
-                    $episode = $this->characterRepo->find($episodeId);
-                    if ($episode instanceof Episode) {
-                        $episode->add($episode);
+                foreach ($transformData['episode'] as $key => $url) {
+                    preg_match('/\/(\d+)$/', $url, $matches);
+                    if (isset($matches[1])) {
+                        $episodeId = $matches[1];
+                        $episode = $this->episodeRepo->find($episodeId);
+                        if ($episode instanceof Episode) {
+                            $episodes->add($episode);
+                        }
                     }
                 }
 
-                if (($character = $this->characterRepo->find($transformData['id'])) === null) {
-                    $object = new Character($transformData['id'], $transformData['name'], $transformData['status'], $transformData['species'], $transformData['type'], $transformData['gender'], $transformData['image'], $transformData['url'], $transformData['created'], $location, $origin, $episodes);
-                 }
+
+                $object = new Character($transformData['id'], $transformData['name'], $transformData['status'], $transformData['species'], $transformData['type'], $transformData['gender'], $transformData['image'], $transformData['url'], $transformData['created'], $location, $origin, $episodes);
+
                 break;
             case 'location':
                 $object = new Location($transformData['name'], $transformData['type'], $transformData['dimension'], $transformData['url'], $transformData['created']);

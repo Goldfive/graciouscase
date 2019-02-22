@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <p>Select a character to view more information about them, and to see the episodes in which they appeared in. <br />In the api I'm not using pagination (because of loading times), so if you want to see the full records
+    you have to use the database connection.</p>
+
+    {% set i = 1 %}
+    {% for character in characters %}
+        {% if character.id is defined %}
+            <a href="/character/{{ character.id }}">{{ character.name }}</a><br />
+        {% endif %}
+       {% set i = i + 1 %}
+    {% endfor %}
+
+{% endblock %}

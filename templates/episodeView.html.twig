@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {% if episode is defined and episode is not null %}
+        Code: {{ episode.episodeCode }}<br />
+        Name: {{ episode.name }}<br />
+        Air date: {{ episode.airDate }}<br /><br />
+
+        Characters in this episode:<br /><br />
+
+        {% for character in episode.characters %}
+            <a href="/character/{{ character.id }}">{{ character.name }}</a><br />
+        {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -72,6 +72,7 @@ class Character
     private $origin = null;
 
     /**
+     * @var Episode
      * @ORM\ManyToMany(targetEntity="App\Entity\Episode", mappedBy="characters")
      */
     private $episodes;
@@ -253,6 +254,11 @@ class Character
         }
 
         return $this;
+    }
+
+    public function getLastEpisode()
+    {
+        return $this->episodes->last();
     }
 
     public function removeEpisode(Episode $episode): self

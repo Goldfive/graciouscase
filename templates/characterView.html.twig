@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% if character is defined and character is not null %}
+        <div style="float:left;padding: 3px;">
+            <img src="{{ character.image }}" />
+        </div>
+        <div style="position:absolute;left:325px;">
+            Name: {{ character.name }}<br />
+            Status: {{ character.status }}<br />
+            Species: {{ character.species }}<br />
+            Type: {{ character.type }}<br />
+            Gender: {{ character.gender }}<br />
+            Last known location: {% if character.location == null %}Unknown{% else %}{{ character.location.name }}{% endif %}<br />
+            Url: <a href="{{ character.url}}">{{ character.url }}</a><br />
+            Created: {{ character.created|date('d-m-Y') }}<br /><br />
+
+            {% if character.lastEpisode is defined and character.lastEpisode.episodeCode is defined %}
+                This character's last episode was: {{ character.lastEpisode.episodeCode }}: {{ character.lastEpisode.name }}<br />
+            {% endif %}
+            This character appears in the following episodes:<br /><br />
+
+            {% for episode in character.episodes %}
+                <a href="/episode/{{ episode.id }}">{{ episode.episodeCode() }}: {{ episode.name }}</a><br />
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
