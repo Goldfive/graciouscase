@@ -2,12 +2,49 @@
 
 namespace App\Tests;
 
-use PHPUnit\Framework\TestCase;
+use App\Api\ApiTransformer;
+use App\Entity\Character;
+use App\Entity\Episode;
+use App\Entity\Location;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiTransformerTest extends TestCase
+class ApiTransformerTest extends WebTestCase
 {
-    public function testSomething()
+    private $em;
+    private $container;
+
+    public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
-        $this->assertTrue(true);
+        parent::__construct($name, $data, $dataName);
+
+        self::bootKernel();
+        $this->container = self::$kernel->getContainer();
+        $this->em = $this->container->get('doctrine.orm.default_entity_manager');
+
+    }
+
+    public function testApiTransformerReturnsCharacter()
+    {
+        $transformData = json_decode('{"id":20,"name":"Ants in my Eyes Johnson","status":"unknown","species":"Human","type":"Human with ants in his eyes","gender":"Male","origin":{"name":"unknown","url":""},"location":{"name":"Interdimensional Cable","url":"https://rickandmortyapi.com/api/location/6"},"image":"https://rickandmortyapi.com/api/character/avatar/20.jpeg","episode":["https://rickandmortyapi.com/api/episode/8"],"url":"https://rickandmortyapi.com/api/character/20","created":"2017-11-04T22:34:53.659Z"}', true);
+        $transformer = new ApiTransformer('character', $transformData, $this->em);
+        $this->assertInstanceOf(Character::class, $transformer->transformToEntity());
+    }
+
+    public function testApiTransformerReturnsEpisode()
+    {
+        $transformData = json_decode('
+            {"id":8,"name":"Rixty Minutes","air_date":"March 17, 2014","episode":"S01E08","characters":["https://rickandmortyapi.com/api/character/1","https://rickandmortyapi.com/api/character/2","https://rickandmortyapi.com/api/character/3","https://rickandmortyapi.com/api/character/4","https://rickandmortyapi.com/api/character/5","https://rickandmortyapi.com/api/character/20","https://rickandmortyapi.com/api/character/28","https://rickandmortyapi.com/api/character/29","https://rickandmortyapi.com/api/character/34","https://rickandmortyapi.com/api/character/37","https://rickandmortyapi.com/api/character/54","https://rickandmortyapi.com/api/character/88","https://rickandmortyapi.com/api/character/91","https://rickandmortyapi.com/api/character/129","https://rickandmortyapi.com/api/character/134","https://rickandmortyapi.com/api/character/136","https://rickandmortyapi.com/api/character/145","https://rickandmortyapi.com/api/character/153","https://rickandmortyapi.com/api/character/157","https://rickandmortyapi.com/api/character/176","https://rickandmortyapi.com/api/character/183","https://rickandmortyapi.com/api/character/184","https://rickandmortyapi.com/api/character/195","https://rickandmortyapi.com/api/character/207","https://rickandmortyapi.com/api/character/214","https://rickandmortyapi.com/api/character/222","https://rickandmortyapi.com/api/character/250","https://rickandmortyapi.com/api/character/266","https://rickandmortyapi.com/api/character/277","https://rickandmortyapi.com/api/character/279","https://rickandmortyapi.com/api/character/314","https://rickandmortyapi.com/api/character/315","https://rickandmortyapi.com/api/character/316","https://rickandmortyapi.com/api/character/317","https://rickandmortyapi.com/api/character/318","https://rickandmortyapi.com/api/character/351","https://rickandmortyapi.com/api/character/358","https://rickandmortyapi.com/api/character/367","https://rickandmortyapi.com/api/character/370","https://rickandmortyapi.com/api/character/373","https://rickandmortyapi.com/api/character/402","https://rickandmortyapi.com/api/character/403","https://rickandmortyapi.com/api/character/404","https://rickandmortyapi.com/api/character/405","https://rickandmortyapi.com/api/character/406","https://rickandmortyapi.com/api/character/407","https://rickandmortyapi.com/api/character/408","https://rickandmortyapi.com/api/character/409","https://rickandmortyapi.com/api/character/410","https://rickandmortyapi.com/api/character/411","https://rickandmortyapi.com/api/character/412","https://rickandmortyapi.com/api/character/413","https://rickandmortyapi.com/api/character/414","https://rickandmortyapi.com/api/character/415","https://rickandmortyapi.com/api/character/416","https://rickandmortyapi.com/api/character/417","https://rickandmortyapi.com/api/character/418"],"url":"https://rickandmortyapi.com/api/episode/8","created":"2017-11-10T12:56:34.543Z"}
+        ', true);
+        $transformer = new ApiTransformer('episode', $transformData, $this->em);
+        $this->assertInstanceOf(Episode::class, $transformer->transformToEntity());
+    }
+
+    public function testApiTransformerReturnsLocation()
+    {
+        $transformData = json_decode('
+            "id":20,"name":"Earth (Replacement Dimension)","type":"Planet","dimension":"Replacement Dimension","residents":["https://rickandmortyapi.com/api/character/1","https://rickandmortyapi.com/api/character/2","https://rickandmortyapi.com/api/character/3","https://rickandmortyapi.com/api/character/4","https://rickandmortyapi.com/api/character/5","https://rickandmortyapi.com/api/character/9","https://rickandmortyapi.com/api/character/11","https://rickandmortyapi.com/api/character/13","https://rickandmortyapi.com/api/character/16","https://rickandmortyapi.com/api/character/31","https://rickandmortyapi.com/api/character/32","https://rickandmortyapi.com/api/character/50","https://rickandmortyapi.com/api/character/58","https://rickandmortyapi.com/api/character/59","https://rickandmortyapi.com/api/character/64","https://rickandmortyapi.com/api/character/66","https://rickandmortyapi.com/api/character/76","https://rickandmortyapi.com/api/character/88","https://rickandmortyapi.com/api/character/103","https://rickandmortyapi.com/api/character/107","https://rickandmortyapi.com/api/character/109","https://rickandmortyapi.com/api/character/113","https://rickandmortyapi.com/api/character/115","https://rickandmortyapi.com/api/character/124","https://rickandmortyapi.com/api/character/128","https://rickandmortyapi.com/api/character/137","https://rickandmortyapi.com/api/character/138","https://rickandmortyapi.com/api/character/141","https://rickandmortyapi.com/api/character/147","https://rickandmortyapi.com/api/character/149","https://rickandmortyapi.com/api/character/151","https://rickandmortyapi.com/api/character/154","https://rickandmortyapi.com/api/character/166","https://rickandmortyapi.com/api/character/167","https://rickandmortyapi.com/api/character/170","https://rickandmortyapi.com/api/character/171","https://rickandmortyapi.com/api/character/172","https://rickandmortyapi.com/api/character/180","https://rickandmortyapi.com/api/character/181","https://rickandmortyapi.com/api/character/182","https://rickandmortyapi.com/api/character/185","https://rickandmortyapi.com/api/character/189","https://rickandmortyapi.com/api/character/190","https://rickandmortyapi.com/api/character/210","https://rickandmortyapi.com/api/character/217","https://rickandmortyapi.com/api/character/218","https://rickandmortyapi.com/api/character/219","https://rickandmortyapi.com/api/character/227","https://rickandmortyapi.com/api/character/230","https://rickandmortyapi.com/api/character/233","https://rickandmortyapi.com/api/character/234","https://rickandmortyapi.com/api/character/236","https://rickandmortyapi.com/api/character/237","https://rickandmortyapi.com/api/character/240","https://rickandmortyapi.com/api/character/241","https://rickandmortyapi.com/api/character/243","https://rickandmortyapi.com/api/character/245","https://rickandmortyapi.com/api/character/248","https://rickandmortyapi.com/api/character/251","https://rickandmortyapi.com/api/character/255","https://rickandmortyapi.com/api/character/259","https://rickandmortyapi.com/api/character/262","https://rickandmortyapi.com/api/character/265","https://rickandmortyapi.com/api/character/272","https://rickandmortyapi.com/api/character/276","https://rickandmortyapi.com/api/character/280","https://rickandmortyapi.com/api/character/292","https://rickandmortyapi.com/api/character/293","https://rickandmortyapi.com/api/character/324","https://rickandmortyapi.com/api/character/326","https://rickandmortyapi.com/api/character/327","https://rickandmortyapi.com/api/character/332","https://rickandmortyapi.com/api/character/335","https://rickandmortyapi.com/api/character/341","https://rickandmortyapi.com/api/character/346","https://rickandmortyapi.com/api/character/347","https://rickandmortyapi.com/api/character/352","https://rickandmortyapi.com/api/character/353","https://rickandmortyapi.com/api/character/354","https://rickandmortyapi.com/api/character/357","https://rickandmortyapi.com/api/character/360","https://rickandmortyapi.com/api/character/361","https://rickandmortyapi.com/api/character/363","https://rickandmortyapi.com/api/character/365","https://rickandmortyapi.com/api/character/374","https://rickandmortyapi.com/api/character/377","https://rickandmortyapi.com/api/character/390","https://rickandmortyapi.com/api/character/391","https://rickandmortyapi.com/api/character/401","https://rickandmortyapi.com/api/character/402","https://rickandmortyapi.com/api/character/405","https://rickandmortyapi.com/api/character/423","https://rickandmortyapi.com/api/character/435","https://rickandmortyapi.com/api/character/437","https://rickandmortyapi.com/api/character/438","https://rickandmortyapi.com/api/character/439","https://rickandmortyapi.com/api/character/440","https://rickandmortyapi.com/api/character/452","https://rickandmortyapi.com/api/character/453","https://rickandmortyapi.com/api/character/467","https://rickandmortyapi.com/api/character/468","https://rickandmortyapi.com/api/character/469","https://rickandmortyapi.com/api/character/471","https://rickandmortyapi.com/api/character/492","https://rickandmortyapi.com/api/character/493"],"url":"https://rickandmortyapi.com/api/location/20","created":"2017-11-18T19:33:01.173Z"}
+        ', true);
+        $transformer = new ApiTransformer('episode', $transformData, $this->em);
+        $this->assertInstanceOf(Location::class, $transformer->transformToEntity());
     }
 }
